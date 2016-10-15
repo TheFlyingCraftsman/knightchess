@@ -50,11 +50,6 @@ function parseMoves($moves) {
         if($parsedMove instanceof stdClass) {
             $parsedMoves[] = json_encode([(array)$start, (array)$parsedMove]);
         }
-        elseif(is_string($parsedMove)) {
-            $parsedMove = json_decode($parsedMove);
-            $parsedMove = array_merge([(array)$start], $parsedMove);
-            $parsedMoves[] = json_encode($parsedMove);
-        }
         elseif(is_array($parsedMove)) {
             foreach ($parsedMove as $pm) {
                 $pmx = json_decode($pm);
