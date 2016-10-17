@@ -32,9 +32,19 @@ $('#locateKnights').on('click', function(){
         console.info("START",knightsOnBoard[0]);
         console.info("n",n);
         console.info("PATHS",allKnightsPath);
+
+        /*jsPlumb.batch(function() {
+            // import here
+            for (var i = 0, j = connections.length; i < j; i++) {
+                jsPlumb.connect(connections[i]);
+            }
+        });*/
     }
 });
 
-
+jsPlumb.ready(function() {
+    $('.board-b72b1').css({position:'relative'});
+    jsPlumb.setContainer(document.getElementsByClassName('board-b72b1'));
+});
 $('#startBtn').on('click', board1.start);
 $('#clearBtn').on('click', board1.clear);

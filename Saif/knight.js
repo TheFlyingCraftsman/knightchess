@@ -86,8 +86,17 @@ var chess = (function(){
     return cartesianCoorsinates;
   }
 
+  function cartesianToAlgebraic(cartesianCoorsinates){
+    let algebraicCoordinates = [];
+    for(let point of cartesianCoorsinates) {
+      algebraicCoordinates.push(String.fromCharCode(point.x + 96)+ point.y);
+    }
+    return algebraicCoordinates;
+  }
+
   return {
     getAllKnightPaths: getAllKnightPaths,
-    algebraicToCartesian: algebraicToCartesian
+    algebraicToCartesian: algebraicToCartesian,
+    cartesianToAlgebraic: cartesianToAlgebraic
   };
 }());
