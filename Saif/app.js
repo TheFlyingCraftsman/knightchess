@@ -11,8 +11,6 @@ $('#locateKnights').on('click', function(){
     let piecesOnBoard = board1.position();
     let knightsOnBoard = [];
     let n = $('#txtMaxKnightsMove').val();
-    console.log(n=="");
-
     Object.keys(piecesOnBoard).forEach(function (position) {
         if(piecesOnBoard[position]==="bN"){
             knightsOnBoard.push(position);
@@ -29,9 +27,10 @@ $('#locateKnights').on('click', function(){
     }
     else {
         let cartesianCoorsinates = chess.algebraicToCartesian(knightsOnBoard);
-        let allKnightsPath = chess.getAllKnightPaths(cartesianCoorsinates[0],cartesianCoorsinates[1],6);
+        let allKnightsPath = chess.getAllKnightPaths(cartesianCoorsinates[0],cartesianCoorsinates[1],n);
         console.info("START",knightsOnBoard[0]);
-        console.info("END",knightsOnBoard[1]);
+        console.info("START",knightsOnBoard[0]);
+        console.info("n",n);
         console.info("PATHS",allKnightsPath);
     }
 });
