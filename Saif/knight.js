@@ -1,71 +1,84 @@
-function getNextStates(state) {
-  let moves = [[-1,-2],[-1,+2],[+1,-2],[+1,+2],[-2,-1],[-2,+1],[+2,-1],[+2,+1]],
-    nextStates = [],
-    p0 = state.position[0],
-    p1 = state.position[1],
-    depth = state.depth + 1;
-  for(let delta of moves) {
-    let x = p0 + delta[0],
-      y = p1 + delta[1];
-    if(x>0 && x<9 && y>0 && y<9) {
-      nextStates.push({
-        parent: state,
-        children: null,
-        position: [x,y],
-        depth: depth,
-        index: 0
-      });
-    }
+var chess = (function(){
+  function Point(x,y){
+    this.x = x;
+    this.y = y;
   }
-  return nextStates;
-}
 
-function getAllKnightPaths(start, end, n) {
-  let stateTree = {
-        parent: null,
-        children: null,
-        position: start,
-        depth: 0,
-        index: 0
-    },
-    path = [start],
-    paths = [];
-  function moveNextFrom(thisState) {
-    if(thisState.children === null) {
-      thisState.children = getNextStates(thisState);
+  function Node(parent, children, point, depth, index) {
+    this.parent = parent;
+    this.children = children;
+    this.point = point;
+    this.depth = depth;
+    this.index = index;
+  }
+
+  function isPointWithinBounds(point){
+    return (point.x>0 && point.x<9 && point.y>0 && point.y<9);
+  }
+
+  function getNextNodes(node) {
+    let moves = [
+          new Point(-1,-2),
+          new Point(-1,+2),
+          new Point(+1,-2),
+          new Point(+1,+2),
+          new Point(-2,-1),
+          new Point(-2,+1),
+          new Point(+2,-1),
+          new Point(+2,+1)
+        ],
+        nextNodes = [],
+        p = node.point;
+    for(let point of moves) {
+      let dp = new Point(p.x + point.x, p.y + point.y);
+      if(isPointWithinBounds(dp)) {
+        nextNodes.push(new Node(node,null,dp,node.depth + 1,0));
+      }
     }
-    else{
-      thisState.index++;
-    }
-    if(thisState.index>=thisState.children.length) {
-      if(thisState.parent===null) {
-        console.info('finished');
-        return;
+    return nextNodes;
+  }
+
+  function getAllKnightPaths(start, end, n) {
+    let startNode = new Node(null,null,start,0,0),
+        path = [start],
+        paths = [];
+    function moveNextFrom(node) {
+      if(node.children === null) {
+        node.children = getNextNodes(node);
+      }
+      else{
+        node.index++;
+      }
+      let children = node.children,
+          index = node.index,
+          currentChild = children[index];
+      if(index>=children.length) {
+        if(node.parent!==null){
+          path.pop();
+          children = null;
+          moveNextFrom(node.parent);
+        }
+      }
+      else if(currentChild.point.x===end.x && currentChild.point.y===end.y) {
+        path.push(end);
+        paths.push(JSON.parse(JSON.stringify(path)));
+        path.pop();
+        moveNextFrom(node);
+      }
+      else if(node.depth + 1 === n) {
+        moveNextFrom(node);
       }
       else {
-        path.pop();
-        thisState.children = null;
-        moveNextFrom(thisState.parent);
-        return;
+        path.push(currentChild.point);
+        moveNextFrom(currentChild);
       }
     }
-    let currentChildren = thisState.children[thisState.index],
-        currentPos = currentChildren.position;
-    if(currentPos[0]===end[0] && currentPos[1]===end[1]) {
-      path.push(end);
-      paths.push(JSON.parse(JSON.stringify(path)));
-      path.pop();
-      moveNextFrom(thisState);
-    }
-    else if(thisState.depth + 1 === n){
-      moveNextFrom(thisState);
-    }
-    else {
-      path.push(currentPos);
-      moveNextFrom(currentChildren);
-    }
+
+    moveNextFrom(startNode);
+    return paths;
   }
 
-  moveNextFrom(stateTree);
-  return paths;
-}
+  return {
+    getAllKnightPaths: getAllKnightPaths
+  };
+}());
