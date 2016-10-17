@@ -46,7 +46,7 @@ var chess = (function(){
       if(node.children === null) {
         node.children = getNextNodes(node);
       }
-      else{
+      else {
         node.index++;
       }
       let children = node.children,
@@ -65,7 +65,7 @@ var chess = (function(){
         path.pop();
         moveNextFrom(node);
       }
-      else if(node.depth + 1 === n) {
+      else if(node.depth + 1 >= n) {
         moveNextFrom(node);
       }
       else {
@@ -78,7 +78,16 @@ var chess = (function(){
     return paths;
   }
 
+  function algebraicToCartesian(algebraicCoordinates){
+    let cartesianCoorsinates = [];
+    for(let pos of algebraicCoordinates) {
+      cartesianCoorsinates.push(new Point(pos.charCodeAt(0)-96,+pos.charAt(1)))
+    }
+    return cartesianCoorsinates;
+  }
+
   return {
-    getAllKnightPaths: getAllKnightPaths
+    getAllKnightPaths: getAllKnightPaths,
+    algebraicToCartesian: algebraicToCartesian
   };
 }());
