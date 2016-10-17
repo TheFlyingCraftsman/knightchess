@@ -27,18 +27,18 @@ $('#locateKnights').on('click', function(){
     }
     else {
         let cartesianCoorsinates = chess.algebraicToCartesian(knightsOnBoard);
-        let allKnightsPath = chess.getAllKnightPaths(cartesianCoorsinates[0],cartesianCoorsinates[1],n);
-        console.info("START",knightsOnBoard[0]);
-        console.info("START",knightsOnBoard[0]);
-        console.info("n",n);
-        console.info("PATHS",allKnightsPath);
-
-        /*jsPlumb.batch(function() {
-            // import here
-            for (var i = 0, j = connections.length; i < j; i++) {
-                jsPlumb.connect(connections[i]);
-            }
-        });*/
+        let allKnightsPaths = chess.getAllKnightPaths(cartesianCoorsinates[0],cartesianCoorsinates[1],n);
+        jsPlumb.batch(function() {
+            allKnightsPaths.forEach(function(path){
+                chess.cartesianToAlgebraic(path).forEach(function(currentValue, index, array){
+                    if(index + 1 !== array.length){
+                        let source = $(".square-55d63[data-square='" + currentValue + "']");
+                        let target = $(".square-55d63[data-square='" + array[index+1] + "']");
+                        jsPlumb.connect({source, target, anchor: "Center",connector:"Straight"});
+                    }
+                });
+            });
+        });
     }
 });
 

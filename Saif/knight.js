@@ -55,7 +55,7 @@ var chess = (function(){
       if(index>=children.length) {
         if(node.parent!==null){
           path.pop();
-          children = null;
+          node.children = null;
           moveNextFrom(node.parent);
         }
       }
